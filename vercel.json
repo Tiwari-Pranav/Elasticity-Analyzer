@@ -23,9 +23,5 @@
         "src": "/(.*)",
         "dest": "ElasticityAnalyzer/wsgi.py"
       }
-    ],
-    "REWRITES": [{
-      "Source":"/(.*)",
-      "Desination":"/"}]
-    
+    ]
 }
