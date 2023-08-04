@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Merchant and Category Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background:linear-gradient(to right, rgb(179, 1, 254), rgb(255, 0, 0));
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color:WHITE;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navbar {
+          background-color: #007BFF;
+          color: #fff;
+          text-align: center;
+          padding: 9px;
+      }
+      h1{
+        color:while;
+      }
+      h2{
+        text-align: center;
+        color:#cce1f3;
+      }
+    </style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>Elasticity Analyzer</h1>
+</div>
+    <h2>Merchant and Category Selection</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="merchant">Select Merchant:</label>
+    <select id="merchant" name="merchant">
+      {% for merchant in merchants %}
+        <option value="{{ merchant }}" {% if selected_merchant == merchant %}selected{% endif %}>{{ merchant }}</option>
+      {% endfor %}
+    </select>
+    <br>
+  
+      <label for="category">Select Category:</label>
+      <select id="category" name="category">
+        {% for category in categories %}
+          <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+        {% endfor %}
+      </select>
+      <br>
+  
+    <input type="submit" value="Submit">
+  </form>
+  
+
+  <script>
+    // JavaScript code to dynamically update the categories dropdown based on the selected merchant.
+    let merchantDropdown = document.getElementById('merchant');
+    let categoriesData = {
+      {% for merchant, categories in MERCHANTS_CATEGORIES.items %}
+      "{{ merchant }}": [
+      {% for category in categories %}
+      "{{ category }}",
+      {% endfor %}
+      ],
+      {% endfor %}
+        };
+    console.log(categoriesData);
+    merchantDropdown.addEventListener('click', (event) => {
+        let selectedMerchant = event.target.value;
+        
+        let categories = categoriesData[selectedMerchant];
+      
+      let categoryDropdown = document.getElementById('category');
+      console.log('categoryDropdown'+categoryDropdown)
+      // Clear previous options and add new options based on selected merchant.
+      while (categoryDropdown.firstChild) {
+        categoryDropdown.removeChild(categoryDropdown.firstChild);
+      }
+  
+      for (let category of categories) {
+        let option = document.createElement('option');
+        option.value = category;
+        option.text = category;
+        categoryDropdown.appendChild(option);
+      }
+    });
+  
+    // Trigger the change event to populate the categories dropdown based on the initial selected merchant.
+    merchantDropdown.dispatchEvent(new Event('click'));
+  </script>
+</body>
+</html>
